@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app="game">
+	<head>
+		<title>Code Challenge</title>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.min.js"></script>
+		<script type="text/javascript" src="js/game.js"></script>
+		<link rel="stylesheet" href="https:////maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/game.css" />
+	</head>
+	<body>
+		<div class="container">
+			<div class="board" ng-controller="boardCtrl">
+				<form role="form">
+					<div class="form-group"  ng-class="{'has-error':!setting.dimension}">
+						<label>Pick board dimension to start the game: </label>
+						<select class="form-control" ng-model="setting.dimension">
+							<option value="[10,10]">10x10</option>
+							<option value="[24,24]">24x24</option>
+							<option value="[50,50]">50x50</option>
+						</select>
+					</div>
+					<div class="form-group" ng-class="{'has-error':setting.mineNum < 1}" >
+						<label>Mine number: </label>
+						<input class="form-control" type=number ng-model="setting.mineNum" />
+					</div>
+					<div class="form-group">
+						<input type=submit value="Start" class="btn btn-default" ng-click="startGame()" />
+					</div>
+				</form>
+				<div class="arena" ng-class="{ended: ended}">
+					<div ng-repeat="gridRow in board.grid track by $index" class="row">
+						<div ng-repeat="coord in gridRow track by $index" class="col"
+							ng-class="{mine: coord.mine, opened: (coord.opened || coord.cnt),flagged: coord.flagged}"
+							ng-style="{top: (coord.y*26)+'px', left: (coord.x*26)+'px'}"
+							ng-click="board.openCoord(coord)"  ng-bind="coord.cnt"
+							ng-right-click="board.flagCoord(coord)"
+						>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
