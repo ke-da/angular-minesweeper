@@ -10,6 +10,8 @@ angular.module("game",[])
 			}).on("win", function(){
 				alert("Congratulation, you win!");
 				$scope.endGame();
+			}).on("error", function(msg){
+				alert(msg);
 			});
 
 			//Default setting
@@ -88,7 +90,12 @@ angular.module("game",[])
 			}
 
 			this.setupGrid = function(){
-				var size = this.param.size;
+				var size = this.param.size,
+					mineNum = this.param.mineNum;
+
+				if (mineNum >= (size.x * size.y)){
+					return this.trigger("error", "Too many mines");
+				}
 
 				this.mines = [];
 				this.grid = new Array(size.y);
@@ -99,16 +106,16 @@ angular.module("game",[])
 					}
 				}
 
-				var mineY = parseInt(this.param.mineNum/size.y), //reserved mine y
-					mineX = parseInt(this.param.mineNum/size.x), //reserved mine x
-					mineItem, ranX, ranY, currX, currY;
-				for(var i=0; i < this.param.mineNum; i++){
+				var mineItem, ranPos, ranX, ranY, currX, currY,
+					totalCell = size.x * size.y;
+				for(var i=0; i < mineNum; i++){
 					//Pick random x,y from unreserved area
-					ranY = this._getRandomInt(mineY, size.y);
-					ranX = this._getRandomInt(mineX, size.x);
+					ranPos = this._getRandomInt(i, totalCell);
+					ranY = parseInt(ranPos/size.x);
+					ranX = parseInt(ranPos%size.x);
 					mineItem = this.grid[ranY][ranX];
-					if (mineItem.mine){ //Collision use curr coord in reserved area
-						currY = parseInt(i/size.y);
+					if (mineItem.mine){
+						currY = parseInt(i/size.x);
 						currX = parseInt(i%size.x);
 						mineItem = this.grid[currY][currX];
 					}
