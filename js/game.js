@@ -53,10 +53,6 @@ angular.module("game",[])
 				this.mine = true;
 			}
 
-			Coord.prototype.unsetMine = function(){
-				delete this.mine;
-			}
-
 			Coord.prototype.openWithCnt = function(cnt){
 				this.cnt = cnt;
 				this.opened = true;
@@ -115,10 +111,8 @@ angular.module("game",[])
 						currY = parseInt(i/size.y);
 						currX = parseInt(i%size.x);
 						mineItem = this.grid[currY][currX];
-						mineItem.setMine();
-					} else{
-						mineItem.setMine();
 					}
+					mineItem.setMine();
 					this.mines.push(mineItem);
 				}
 			}
